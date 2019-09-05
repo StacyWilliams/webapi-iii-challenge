@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
     }
   }); //endpoint works
 
-router.get('/:id', async (req, res) => {
+router.get('/:id',validatePostId, async (req, res) => {
     const { id } = req.params;
   
     try {
@@ -28,7 +28,7 @@ router.get('/:id', async (req, res) => {
   }); //endpoint works
   
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',validatePostId, async (req, res) => {
     const { id } = req.params;
   
     try {
@@ -44,7 +44,7 @@ router.delete('/:id', async (req, res) => {
     }
   }); //endpoint works
 
-router.put('/:id', async (req, res) => {
+router.put('/:id',validatePostId, async (req, res) => {
     const { id } = req.params;
     const changes = req.body;
         console.log(changes)
@@ -62,10 +62,27 @@ router.put('/:id', async (req, res) => {
       res.status(500).json({ message: 'Failed to update post' });
     }
   }); //endpoint works
-// custom middleware
+
+
+  // custom middleware
 
 function validatePostId(req, res, next) {
+  const id = req.params.id;
+  Posts.getById(id)
+        .then(post => {
+            console.log(post);
+            if (!post) {
+                res.status(400).json({ message: "invalid post id" });
+            } else {
+                req.post = post;
+                next();
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ message: "post could not be retrieved" });
+        });
+}
 
-};
 
 module.exports = router;

@@ -1,13 +1,14 @@
 const express = require("express");
 const server = express();
+const helmet = require("helmet");
 
 const postRouter = require('./posts/postRouter.js');
 const userRouter = require('./users/userRouter.js')
 
 
 server.use(express.json());
-server.use('/api/posts', postRouter);
-server.use('/api/users', userRouter);
+server.use('/api/posts',logger, postRouter);
+server.use('/api/users', logger, userRouter);
 module.exports = server;
 
 server.get("/", logger, (req, res) => {
@@ -22,6 +23,6 @@ function logger(req, res, next) {
         }, timestamp: ${new Date().toISOString()}`
     );
     next();
-}
+} // middleware works
 
 module.exports = server;
