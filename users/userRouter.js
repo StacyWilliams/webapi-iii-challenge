@@ -130,7 +130,7 @@ function validateUserId(req, res, next) {
             console.log(err);
             res.status(500).json({ message: "user could not be retrieved" });
         });
-}
+} //middleware works
 
 function validateUser(req, res, next) {
 
